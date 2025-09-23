@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPB test task shopify dev departement</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="header">CPB test task shopify dev departement</div>
+
+        <div class="section">
+            <div class="section-title">ФОН</div>
+            <div class="shapes">
+                <button class="bg-shape-btn" data-shape="circle">●</button>
+                <button class="bg-shape-btn" data-shape="square">■</button>
+                <button class="bg-shape-btn" data-shape="triangle">▲</button>
+            </div>
+        </div>
+
+         <div class="section">
+            <div class="color-picker">
+                <label for="bgColorPicker">Цвет фигур фона</label>
+                <input type="color" id="bgColorPicker" value="#666" class="color-input">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ИКОНКИ</div>
+            <div class="shapes">
+                <button class="shape-btn" data-shape="star">★</button>
+                <button class="shape-btn" data-shape="umbrella">☂</button>
+                <button class="shape-btn active" data-shape="triangle">▲</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="color-picker">
+                <label for="iconColorPicker">Цвет иконок</label>
+                <input type="color" id="iconColorPicker" value="#4a90e2" class="color-input">
+            </div>
+        </div>
+
+        <div class="export-section">
+            <div class="section-title">ЭКСПОРТ</div>
+             <div class="slider">
+                <label>Масштаб: <span id="scaleValue">1</span></label>
+                <input type="range" id="scaleSlider" min="0.5" max="3" value="1" step="0.1">
+            </div>
+            <div>
+                <button class="format-btn" onclick="exportCanvas('png')">PNG</button>
+                <button class="format-btn" onclick="exportCanvas('svg')">SVG</button>
+            </div>
+        </div>
+
+        <div class="info-text">
+          Фон меняется только тип и цвет. Иконки можно перемещать, вращать, удалять (Del), дублировать (Ctrl+D).
+        </div>
+    </div>
+
+    <div class="canvas-container">
+        <div class="canvas-wrapper">
+            <canvas id="fabricCanvas" width="600" height="400"></canvas>
+            <div class="controls">
+                <button class="control-btn" onclick="deleteSelected()">Удалить выбранное</button>
+                <button class="control-btn" onclick="clearCanvas()">Очистить холст</button>
+                <button class="control-btn" onclick="duplicateSelected()">Дублировать</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
