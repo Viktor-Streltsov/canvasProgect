@@ -1,7 +1,150 @@
-const canvas = new fabric.Canvas('fabricCanvas', {
-    backgroundColor: '#ffffff',
-    selection: true
-});
+let canvas;
+
+let currentLang = 'ru';
+let currentTheme = 'light';
+
+let currentIconColor = '#4a90e2';
+let currentBackgroundColor = '#666';
+
+const STORAGE_KEYS = {
+    theme: 'canvasProgectTheme',
+    lang: 'canvasProgectLang'
+};
+
+const I18N = {
+    ru: {
+        documentTitle: 'CPB test task shopify dev departement',
+        appTitle: 'CPB test task shopify dev departement',
+        bgTitle: 'ФОН',
+        bgColorLabel: 'Цвет фигур фона',
+        iconsTitle: 'ИКОНКИ',
+        iconColorLabel: 'Цвет иконок',
+        exportTitle: 'ЭКСПОРТ',
+        scaleLabel: 'Масштаб:',
+        deleteBtn: 'Удалить выбранное',
+        clearBtn: 'Очистить холст',
+        duplicateBtn: 'Дублировать',
+        infoText: 'Фон меняется только тип и цвет. Иконки можно перемещать, вращать, удалять (Del), дублировать (Ctrl+D).',
+        themeLight: 'Светлая',
+        themeDark: 'Тёмная'
+    },
+    en: {
+        documentTitle: 'CPB test task shopify dev departement',
+        appTitle: 'CPB test task shopify dev departement',
+        bgTitle: 'BACKGROUND',
+        bgColorLabel: 'Background shape color',
+        iconsTitle: 'ICONS',
+        iconColorLabel: 'Icon color',
+        exportTitle: 'EXPORT',
+        scaleLabel: 'Scale:',
+        deleteBtn: 'Delete selected',
+        clearBtn: 'Clear canvas',
+        duplicateBtn: 'Duplicate',
+        infoText: 'Background changes only type and color. Icons can be moved, rotated, deleted (Del), duplicated (Ctrl+D).',
+        themeLight: 'Light',
+        themeDark: 'Dark'
+    }
+};
+
+function getCssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function getInitialLang() {
+    const saved = localStorage.getItem(STORAGE_KEYS.lang);
+    if (saved === 'en' || saved === 'ru') return saved;
+    return 'ru';
+}
+
+function getInitialTheme() {
+    const saved = localStorage.getItem(STORAGE_KEYS.theme);
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setLangActiveButtons(lang) {
+    const enBtn = document.getElementById('langEnBtn');
+    const ruBtn = document.getElementById('langRuBtn');
+    if (enBtn) enBtn.classList.toggle('active', lang === 'en');
+    if (ruBtn) ruBtn.classList.toggle('active', lang === 'ru');
+}
+
+function updateThemeToggleLabel() {
+    const btn = document.getElementById('themeToggleBtn');
+    if (!btn) return;
+    const t = I18N[currentLang] || I18N.ru;
+    btn.textContent = currentTheme === 'dark' ? t.themeLight : t.themeDark;
+}
+
+function applyLanguage(lang) {
+    currentLang = lang === 'en' ? 'en' : 'ru';
+    const t = I18N[currentLang] || I18N.ru;
+
+    document.documentElement.lang = currentLang;
+    document.title = t.documentTitle;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (!key) return;
+        if (t[key] !== undefined) el.textContent = t[key];
+    });
+
+    setLangActiveButtons(currentLang);
+    updateThemeToggleLabel();
+}
+
+function syncThemeToCanvas() {
+    if (!canvas) return;
+
+    const canvasBg = getCssVar('--canvas-bg');
+    const shapeStroke = getCssVar('--shape-stroke');
+
+    canvas.backgroundColor = canvasBg;
+    canvas.getObjects().forEach(obj => {
+        // Фоновые фигуры имеют stroke (обводку)
+        if (obj && obj.stroke && obj.strokeWidth > 0) {
+            obj.set('stroke', shapeStroke);
+        }
+    });
+
+    canvas.renderAll();
+}
+
+function applyTheme(theme) {
+    currentTheme = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.classList.toggle('theme-dark', currentTheme === 'dark');
+
+    localStorage.setItem(STORAGE_KEYS.theme, currentTheme);
+    updateThemeToggleLabel();
+    syncThemeToCanvas();
+}
+
+function initCanvas() {
+    canvas = new fabric.Canvas('fabricCanvas', {
+        backgroundColor: getCssVar('--canvas-bg'),
+        selection: true
+    });
+
+    syncThemeToCanvas();
+}
+
+function setupHeaderControls() {
+    const enBtn = document.getElementById('langEnBtn');
+    const ruBtn = document.getElementById('langRuBtn');
+    const themeBtn = document.getElementById('themeToggleBtn');
+
+    if (enBtn) {
+        enBtn.addEventListener('click', () => applyLanguage('en'));
+    }
+    if (ruBtn) {
+        ruBtn.addEventListener('click', () => applyLanguage('ru'));
+    }
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+    }
+}
 
 // Обработчик выбора цвета иконок
 function setupIconColorPicker() {
@@ -96,7 +239,7 @@ function addBackgroundShape(shapeType) {
             newObject = new fabric.Circle({
                 radius: 80,
                 fill: currentBackgroundColor,
-                stroke: '#333',
+                stroke: getCssVar('--shape-stroke'),
                 strokeWidth: 2,
                 left: x,
                 top: y,
@@ -108,7 +251,7 @@ function addBackgroundShape(shapeType) {
                 width: 160,
                 height: 160,
                 fill: currentBackgroundColor,
-                stroke: '#333',
+                stroke: getCssVar('--shape-stroke'),
                 strokeWidth: 2,
                 left: x,
                 top: y,
@@ -120,7 +263,7 @@ function addBackgroundShape(shapeType) {
                 width: 160,
                 height: 160,
                 fill: currentBackgroundColor,
-                stroke: '#333',
+                stroke: getCssVar('--shape-stroke'),
                 strokeWidth: 2,
                 left: x,
                 top: y,
@@ -305,7 +448,7 @@ function deleteSelected() {
 
 function clearCanvas() {
     canvas.clear();
-    canvas.backgroundColor = '#ffffff';
+    canvas.backgroundColor = getCssVar('--canvas-bg');
     canvas.renderAll();
 }
 
@@ -337,36 +480,16 @@ function setupKeyboardControls() {
     });
 }
 
-// Настройка событий холста
-function setupCanvasEvents() {
-    // Обработчик изменения выбранного объекта
-    canvas.on('selection:created', function(e) {
-        const activeObject = canvas.getActiveObject();
-        if (activeObject && activeObject.fill) {
-            // Обновляем выбранный цвет если возможно
-            const iconColorSwatch = document.querySelector(`[data-color="${activeObject.fill}"].icon-color-swatch`);
-            if (iconColorSwatch) {
-                document.querySelectorAll('.icon-color-swatch').forEach(s => s.classList.remove('active'));
-                iconColorSwatch.classList.add('active');
-                currentIconColor = activeObject.fill;
-            }
-        }
-    });
-
-    canvas.on('selection:updated', function(e) {
-        const activeObject = canvas.getActiveObject();
-        if (activeObject && activeObject.fill) {
-            const iconColorSwatch = document.querySelector(`[data-color="${activeObject.fill}"].icon-color-swatch`);
-            if (iconColorSwatch) {
-                document.querySelectorAll('.icon-color-swatch').forEach(s => s.classList.remove('active'));
-                iconColorSwatch.classList.add('active');
-                currentIconColor = activeObject.fill;
-            }
-        }
-    });
-}
-
 function init() {
+    currentLang = getInitialLang();
+    applyLanguage(currentLang);
+
+    currentTheme = getInitialTheme();
+    applyTheme(currentTheme);
+
+    initCanvas();
+    setupHeaderControls();
+
     setupIconColorPicker();
     setupBackgroundColorPicker();
     setupBackgroundShapeButtons();

@@ -9,44 +9,55 @@
 </head>
 <body>
     <div class="sidebar">
-        <div class="header">CPB test task shopify dev departement</div>
+        <div class="header">
+            <div class="header-row">
+                <div class="header-title" data-i18n="appTitle">CPB test task shopify dev departement</div>
+                <div class="header-controls">
+                    <div class="lang-switch" role="group" aria-label="Language">
+                        <button type="button" class="lang-btn" id="langEnBtn" data-lang="en">EN</button>
+                        <button type="button" class="lang-btn" id="langRuBtn" data-lang="ru">RU</button>
+                    </div>
+                    <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="Toggle theme"></button>
+                </div>
+            </div>
+        </div>
 
         <div class="section">
-            <div class="section-title">ФОН</div>
+            <div class="section-title" data-i18n="bgTitle">ФОН</div>
             <div class="shapes">
-                <button class="bg-shape-btn" data-shape="circle">●</button>
-                <button class="bg-shape-btn" data-shape="square">■</button>
-                <button class="bg-shape-btn" data-shape="triangle">▲</button>
+                <button class="bg-shape-btn" data-shape="circle" type="button">●</button>
+                <button class="bg-shape-btn" data-shape="square" type="button">■</button>
+                <button class="bg-shape-btn" data-shape="triangle" type="button">▲</button>
             </div>
         </div>
 
          <div class="section">
             <div class="color-picker">
-                <label for="bgColorPicker">Цвет фигур фона</label>
+                <label for="bgColorPicker" data-i18n="bgColorLabel">Цвет фигур фона</label>
                 <input type="color" id="bgColorPicker" value="#666" class="color-input">
             </div>
         </div>
 
         <div class="section">
-            <div class="section-title">ИКОНКИ</div>
+            <div class="section-title" data-i18n="iconsTitle">ИКОНКИ</div>
             <div class="shapes">
-                <button class="shape-btn" data-shape="star">★</button>
-                <button class="shape-btn" data-shape="umbrella">☂</button>
-                <button class="shape-btn active" data-shape="triangle">▲</button>
+                <button class="shape-btn" data-shape="star" type="button">★</button>
+                <button class="shape-btn" data-shape="umbrella" type="button">☂</button>
+                <button class="shape-btn active" data-shape="triangle" type="button">▲</button>
             </div>
         </div>
 
         <div class="section">
             <div class="color-picker">
-                <label for="iconColorPicker">Цвет иконок</label>
+                <label for="iconColorPicker" data-i18n="iconColorLabel">Цвет иконок</label>
                 <input type="color" id="iconColorPicker" value="#4a90e2" class="color-input">
             </div>
         </div>
 
         <div class="export-section">
-            <div class="section-title">ЭКСПОРТ</div>
+            <div class="section-title" data-i18n="exportTitle">ЭКСПОРТ</div>
              <div class="slider">
-                <label>Масштаб: <span id="scaleValue">1</span></label>
+                <label><span data-i18n="scaleLabel">Масштаб:</span> <span id="scaleValue">1</span></label>
                 <input type="range" id="scaleSlider" min="0.5" max="3" value="1" step="0.1">
             </div>
             <div>
@@ -55,8 +66,8 @@
             </div>
         </div>
 
-        <div class="info-text">
-          Фон меняется только тип и цвет. Иконки можно перемещать, вращать, удалять (Del), дублировать (Ctrl+D).
+        <div class="info-text" data-i18n="infoText">
+            Фон меняется только тип и цвет. Иконки можно перемещать, вращать, удалять (Del), дублировать (Ctrl+D).
         </div>
     </div>
 
@@ -64,9 +75,9 @@
         <div class="canvas-wrapper">
             <canvas id="fabricCanvas" width="600" height="400"></canvas>
             <div class="controls">
-                <button class="control-btn" onclick="deleteSelected()">Удалить выбранное</button>
-                <button class="control-btn" onclick="clearCanvas()">Очистить холст</button>
-                <button class="control-btn" onclick="duplicateSelected()">Дублировать</button>
+                <button class="control-btn" onclick="deleteSelected()" data-i18n="deleteBtn">Удалить выбранное</button>
+                <button class="control-btn" onclick="clearCanvas()" data-i18n="clearBtn">Очистить холст</button>
+                <button class="control-btn" onclick="duplicateSelected()" data-i18n="duplicateBtn">Дублировать</button>
             </div>
         </div>
     </div>
